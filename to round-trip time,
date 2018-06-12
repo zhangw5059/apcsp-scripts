@@ -1,0 +1,360 @@
+PING(8)                System Manager's Manual: iputils                PING(8)
+
+NNAAMMEE
+       ping - send ICMP ECHO_REQUEST to network hosts
+
+SSYYNNOOPPSSIISS
+       ppiinngg [--aaAAbbBBddDDffhhLLnnOOqqrrRRUUvvVV4466] [--cc _c_o_u_n_t] [--FF _f_l_o_w_l_a_b_e_l] [--ii _i_n_t_e_r_v_a_l] [--II
+       _i_n_t_e_r_f_a_c_e] [--ll  _p_r_e_l_o_a_d]  [--mm  _m_a_r_k]  [--MM  _p_m_t_u_d_i_s_c___o_p_t_i_o_n]  [--NN  _n_o_d_e_‐
+       _i_n_f_o___o_p_t_i_o_n] [--ww _d_e_a_d_l_i_n_e] [--WW _t_i_m_e_o_u_t] [--pp _p_a_t_t_e_r_n] [--QQ _t_o_s] [--ss _p_a_c_k_‐
+       _e_t_s_i_z_e] [--SS _s_n_d_b_u_f] [--tt _t_t_l] [--TT _t_i_m_e_s_t_a_m_p _o_p_t_i_o_n] [_h_o_p  _._._.]  _d_e_s_t_i_n_a_‐
+       _t_i_o_n
+
+DDEESSCCRRIIPPTTIIOONN
+       ppiinngg uses the ICMP protocol's mandatory ECHO_REQUEST datagram to elicit
+       an ICMP ECHO_RESPONSE from a host or gateway.   ECHO_REQUEST  datagrams
+       (``pings'')  have  an  IP and ICMP header, followed by a struct timeval
+       and then an arbitrary number of ``pad'' bytes  used  to  fill  out  the
+       packet.
+
+       ppiinngg  works  with both IPv4 and IPv6. Using only one of them explicitly
+       can be enforced by specifying --44 or --66.
+
+       ppiinngg can also send IPv6 Node Information Queries (RFC4620).  Intermedi‐
+       ate _h_o_ps may not be allowed, because IPv6 source routing was deprecated
+       (RFC5095).
+
+OOPPTTIIOONNSS
+       --44     Use IPv4 only.
+
+       --66     Use IPv6 only.
+
+       --aa     Audible ping.
+
+       --AA     Adaptive ping. Interpacket interval adapts to  round-trip  time,
+              so  that  effectively  not more than one (or more, if preload is
+              set) unanswered probe is present in the network. Minimal  inter‐
+              val  is  200msec  for  not super-user.  On networks with low rtt
+              this mode is essentially equivalent to flood mode.
+
+       --bb     Allow pinging a broadcast address.
+
+       --BB     Do not allow ppiinngg to  change  source  address  of  probes.   The
+              address is bound to one selected when ppiinngg starts.
+
+       --cc _c_o_u_n_t
+              Stop  after  sending  _c_o_u_n_t  ECHO_REQUEST packets. With _d_e_a_d_l_i_n_e
+              option, ppiinngg waits for _c_o_u_n_t ECHO_REPLY packets, until the time‐
+              out expires.
+
+       --dd     Set  the SO_DEBUG option on the socket being used.  Essentially,
+              this socket option is not used by Linux kernel.
+
+       --DD     Print timestamp (unix time + microseconds  as  in  gettimeofday)
+              before each line.
+
+       --ff     Flood  ping.  For  every  ECHO_REQUEST  sent  a  period ``.'' is
+              printed, while for  ever  ECHO_REPLY  received  a  backspace  is
+              printed.   This provides a rapid display of how many packets are
+              being dropped.  If interval is not given, it  sets  interval  to
+              zero  and  outputs packets as fast as they come back or one hun‐
+              dred times per second, whichever is more.  Only  the  super-user
+              may use this option with zero interval.
+
+       --FF _f_l_o_w _l_a_b_e_l
+              IPv6  only.  Allocate and set 20 bit flow label (in hex) on echo
+              request packets.  If value is zero, kernel allocates random flow
+              label.
+
+       --hh     Show help.
+
+       --ii _i_n_t_e_r_v_a_l
+              Wait  _i_n_t_e_r_v_a_l seconds between sending each packet.  The default
+              is to wait for one second between each packet normally,  or  not
+              to  wait in flood mode. Only super-user may set interval to val‐
+              ues less than 0.2 seconds.
+
+       --II _i_n_t_e_r_f_a_c_e
+              _i_n_t_e_r_f_a_c_e is either an address, or an interface name.  If _i_n_t_e_r_‐
+              _f_a_c_e  is  an address, it sets source address to specified inter‐
+              face address.  If _i_n_t_e_r_f_a_c_e in an interface name, it sets source
+              interface  to specified interface.  For IPv6, when doing ping to
+              a link-local scope address, link specification (by the '%'-nota‐
+              tion in _d_e_s_t_i_n_a_t_i_o_n, or by this option) is required.
+
+       --ll _p_r_e_l_o_a_d
+              If  _p_r_e_l_o_a_d is specified, ppiinngg sends that many packets not wait‐
+              ing for reply.  Only the super-user may select preload more than
+              3.
+
+       --LL     Suppress  loopback of multicast packets.  This flag only applies
+              if the ping destination is a multicast address.
+
+       --mm _m_a_r_k
+              use _m_a_r_k to tag the packets going out. This is useful for  vari‐
+              ety of reasons within the kernel such as using policy routing to
+              select specific outbound processing.
+
+       --MM _p_m_t_u_d_i_s_c___o_p_t
+              Select Path MTU  Discovery  strategy.   _p_m_t_u_d_i_s_c___o_p_t_i_o_n  may  be
+              either  _d_o  (prohibit  fragmentation,  even local one), _w_a_n_t (do
+              PMTU discovery, fragment locally when packet size is large),  or
+              _d_o_n_t (do not set DF flag).
+
+       --NN _n_o_d_e_i_n_f_o___o_p_t_i_o_n
+              IPv6  only.   Send  ICMPv6  Node  Information Queries (RFC4620),
+              instead of Echo Request.  CAP_NET_RAW capability is required.
+
+              hheellpp   Show help for NI support.
+
+              nnaammee   Queries for Node Names.
+
+              iippvv66   Queries for IPv6 Addresses. There are several  IPv6  spe‐
+                     cific flags.
+
+                     iippvv66--gglloobbaall
+                            Request IPv6 global-scope addresses.
+
+                     iippvv66--ssiitteellooccaall
+                            Request IPv6 site-local addresses.
+
+                     iippvv66--lliinnkkllooccaall
+                            Request IPv6 link-local addresses.
+
+                     iippvv66--aallll
+                            Request IPv6 addresses on other interfaces.
+
+              iippvv44   Queries  for  IPv4 Addresses.  There is one IPv4 specific
+                     flag.
+
+                     iippvv44--aallll
+                            Request IPv4 addresses on other interfaces.
+
+              ssuubbjjeecctt--iippvv66==_i_p_v_6_a_d_d_r
+                     IPv6 subject address.
+
+              ssuubbjjeecctt--iippvv44==_i_p_v_4_a_d_d_r
+                     IPv4 subject address.
+
+              ssuubbjjeecctt--nnaammee==_n_o_d_e_n_a_m_e
+                     Subject name.  If it contains more than one  dot,  fully-
+                     qualified domain name is assumed.
+
+              ssuubbjjeecctt--ffqqddnn==_n_o_d_e_n_a_m_e
+                     Subject  name.   Fully-qualified  domain  name  is always
+                     assumed.
+
+       --nn     Numeric output only.  No attempt will be made to lookup symbolic
+              names for host addresses.
+
+       --OO     Report  outstanding  ICMP ECHO reply before sending next packet.
+              This is useful together with the timestamp --DD to log output to a
+              diagnostic file and search for missing answers.
+
+       --pp _p_a_t_t_e_r_n
+              You  may  specify  up to 16 ``pad'' bytes to fill out the packet
+              you send.  This is useful for diagnosing data-dependent problems
+              in  a network.  For example, --pp ffff will cause the sent packet to
+              be filled with all ones.
+
+       --qq     Quiet output.  Nothing is displayed except the summary lines  at
+              startup time and when finished.
+
+       --QQ _t_o_s Set Quality of Service -related bits in ICMP datagrams.  _t_o_s can
+              be decimal (ppiinngg only) or hex number.
+
+              In RFC2474, these fields are interpreted as 8-bit Differentiated
+              Services  (DS), consisting of: bits 0-1 (2 lowest bits) of sepa‐
+              rate data, and bits 2-7 (highest 6 bits) of Differentiated  Ser‐
+              vices  Codepoint  (DSCP).   In RFC2481 and RFC3168, bits 0-1 are
+              used for ECN.
+
+              Historically (RFC1349, obsoleted by RFC2474), these were  inter‐
+              preted  as:  bit  0  (lowest  bit) for reserved (currently being
+              redefined as congestion control), 1-4 for Type  of  Service  and
+              bits 5-7 (highest bits) for Precedence.
+
+       --rr     Bypass  the normal routing tables and send directly to a host on
+              an attached interface.  If  the  host  is  not  on  a  directly-
+              attached network, an error is returned.  This option can be used
+              to ping a local host through an  interface  that  has  no  route
+              through it provided the option --II is also used.
+
+       --RR     ppiinngg  only.   Record route.  Includes the RECORD_ROUTE option in
+              the  ECHO_REQUEST  packet  and  displays  the  route  buffer  on
+              returned  packets.  Note that the IP header is only large enough
+              for nine such routes.  Many hosts ignore or discard this option.
+
+       --ss _p_a_c_k_e_t_s_i_z_e
+              Specifies the number of data bytes to be sent.  The  default  is
+              56,  which translates into 64 ICMP data bytes when combined with
+              the 8 bytes of ICMP header data.
+
+       --SS _s_n_d_b_u_f
+              Set socket sndbuf. If not specified, it is  selected  to  buffer
+              not more than one packet.
+
+       --tt _t_t_l ppiinngg only.  Set the IP Time to Live.
+
+       --TT _t_i_m_e_s_t_a_m_p _o_p_t_i_o_n
+              Set  special  IP  timestamp  options.   _t_i_m_e_s_t_a_m_p  _o_p_t_i_o_n may be
+              either  _t_s_o_n_l_y  (only  timestamps),  _t_s_a_n_d_a_d_d_r  (timestamps  and
+              addresses) or _t_s_p_r_e_s_p_e_c _h_o_s_t_1 _[_h_o_s_t_2 _[_h_o_s_t_3 _[_h_o_s_t_4_]_]_] (timestamp
+              prespecified hops).
+
+       --UU     Print full user-to-user latency (the  old  behaviour).  Normally
+              ppiinngg prints network round trip time, which can be different f.e.
+              due to DNS failures.
+
+       --vv     Verbose output.
+
+       --VV     Show version and exit.
+
+       --ww _d_e_a_d_l_i_n_e
+              Specify a timeout, in seconds, before ppiinngg exits  regardless  of
+              how  many  packets have been sent or received. In this case ppiinngg
+              does not stop after _c_o_u_n_t packet are sent, it waits  either  for
+              _d_e_a_d_l_i_n_e  expire  or until _c_o_u_n_t probes are answered or for some
+              error notification from network.
+
+       --WW _t_i_m_e_o_u_t
+              Time to wait for a response, in seconds. The option affects only
+              timeout  in  absence  of any responses, otherwise ppiinngg waits for
+              two RTTs.
+
+       When using ppiinngg for fault isolation, it should  first  be  run  on  the
+       local  host,  to verify that the local network interface is up and run‐
+       ning. Then, hosts and gateways  further  and  further  away  should  be
+       ``pinged''.  Round-trip  times and packet loss statistics are computed.
+       If duplicate packets are received, they are not included in the  packet
+       loss calculation, although the round trip time of these packets is used
+       in calculating the  minimum/average/maximum  round-trip  time  numbers.
+       When  the  specified number of packets have been sent (and received) or
+       if the program is terminated with a SIGINT, a  brief  summary  is  dis‐
+       played.  Shorter current statistics can be obtained without termination
+       of process with signal SIGQUIT.
+
+       If ppiinngg does not receive any reply packets at all  it  will  exit  with
+       code  1.  If  a packet _c_o_u_n_t and _d_e_a_d_l_i_n_e are both specified, and fewer
+       than _c_o_u_n_t packets are received by the time the _d_e_a_d_l_i_n_e  has  arrived,
+       it  will  also  exit with code 1.  On other error it exits with code 2.
+       Otherwise it exits with code 0. This makes it possible to use the  exit
+       code to see if a host is alive or not.
+
+       This  program  is  intended for use in network testing, measurement and
+       management.  Because of the load it can impose on the  network,  it  is
+       unwise to use ppiinngg during normal operations or from automated scripts.
+
+IICCMMPP PPAACCKKEETT DDEETTAAIILLSS
+       An  IP header without options is 20 bytes.  An ICMP ECHO_REQUEST packet
+       contains an additional 8 bytes worth of  ICMP  header  followed  by  an
+       arbitrary  amount  of data.  When a _p_a_c_k_e_t_s_i_z_e is given, this indicated
+       the size of this extra piece of data (the  default  is  56).  Thus  the
+       amount  of data received inside of an IP packet of type ICMP ECHO_REPLY
+       will always be 8 bytes more than the requested  data  space  (the  ICMP
+       header).
+
+       If  the  data space is at least of size of struct timeval ppiinngg uses the
+       beginning bytes of this space to include a timestamp which it  uses  in
+       the  computation of round trip times.  If the data space is shorter, no
+       round trip times are given.
+
+DDUUPPLLIICCAATTEE AANNDD DDAAMMAAGGEEDD PPAACCKKEETTSS
+       ppiinngg will report duplicate  and  damaged  packets.   Duplicate  packets
+       should  never  occur, and seem to be caused by inappropriate link-level
+       retransmissions.  Duplicates may  occur  in  many  situations  and  are
+       rarely  (if  ever)  a good sign, although the presence of low levels of
+       duplicates may not always be cause for alarm.
+
+       Damaged packets are obviously serious cause for alarm and  often  indi‐
+       cate  broken  hardware somewhere in the ppiinngg packet's path (in the net‐
+       work or in the hosts).
+
+TTRRYYIINNGG DDIIFFFFEERREENNTT DDAATTAA PPAATTTTEERRNNSS
+       The (inter)network layer should never treat packets differently depend‐
+       ing  on  the  data contained in the data portion.  Unfortunately, data-
+       dependent problems have been known to sneak into  networks  and  remain
+       undetected for long periods of time.  In many cases the particular pat‐
+       tern that will have problems is something that doesn't have  sufficient
+       ``transitions'',  such  as all ones or all zeros, or a pattern right at
+       the edge, such as almost all zeros.  It  isn't  necessarily  enough  to
+       specify  a  data pattern of all zeros (for example) on the command line
+       because the pattern that is of interest is at the data link level,  and
+       the  relationship between what you type and what the controllers trans‐
+       mit can be complicated.
+
+       This means that if you have a data-dependent problem you will  probably
+       have to do a lot of testing to find it.  If you are lucky, you may man‐
+       age to find a file that either can't be sent  across  your  network  or
+       that  takes  much  longer  to transfer than other similar length files.
+       You can then examine this file for repeated patterns that you can  test
+       using the --pp option of ppiinngg.
+
+TTTTLL DDEETTAAIILLSS
+       The  TTL  value  of  an  IP  packet represents the maximum number of IP
+       routers that the packet can go through before being  thrown  away.   In
+       current  practice  you can expect each router in the Internet to decre‐
+       ment the TTL field by exactly one.
+
+       The TCP/IP specification states that the  TTL  field  for  TCP  packets
+       should  be set to 60, but many systems use smaller values (4.3 BSD uses
+       30, 4.2 used 15).
+
+       The maximum possible value of this field is 255, and most Unix  systems
+       set the TTL field of ICMP ECHO_REQUEST packets to 255.  This is why you
+       will find you can ``ping'' some hosts, but not  reach  them  with  tteell‐‐
+       nneett(1) or ffttpp(1).
+
+       In  normal  operation  ping  prints  the  TTL  value from the packet it
+       receives.  When a remote system receives a ping packet, it can  do  one
+       of three things with the TTL field in its response:
+
+       · Not  change  it;  this  is  what Berkeley Unix systems did before the
+         4.3BSD Tahoe release. In this case the  TTL  value  in  the  received
+         packet  will  be  255  minus  the number of routers in the round-trip
+         path.
+
+       · Set it to 255; this is what current Berkeley  Unix  systems  do.   In
+         this  case the TTL value in the received packet will be 255 minus the
+         number of routers in the path ffrroomm the remote system ttoo  the  ppiinngging
+         host.
+
+       · Set it to some other value. Some machines use the same value for ICMP
+         packets that they use for TCP packets, for example either 30  or  60.
+         Others may use completely wild values.
+
+BBUUGGSS
+       · Many Hosts and Gateways ignore the RECORD_ROUTE option.
+
+       · The   maximum  IP  header  length  is  too  small  for  options  like
+         RECORD_ROUTE to be completely useful.  There's not much that  can  be
+         done about this, however.
+
+       · Flood  pinging  is  not recommended in general, and flood pinging the
+         broadcast address should only be done under  very  controlled  condi‐
+         tions.
+
+SSEEEE AALLSSOO
+       nneettssttaatt(1), iiffccoonnffiigg(8).
+
+HHIISSTTOORRYY
+       The ppiinngg command appeared in 4.3BSD.
+
+       The version described here is its descendant specific to Linux.
+
+       As  of  version  s20150815, the ppiinngg66 binary doesn't exist anymore.  It
+       has been merged into ppiinngg. Creating a symlink named ppiinngg66  pointing  to
+       ppiinngg will result in the same funcionality as before.
+
+SSEECCUURRIITTYY
+       ppiinngg  requires  CAP_NET_RAW capability to be executed 1) if the program
+       is used for non-echo queries (See --NN option), or 2) if kernel does  not
+       support  non-raw ICMP sockets, or 3) if the user is not allowed to cre‐
+       ate an ICMP echo socket.  The program may be used as set-uid root.
+
+AAVVAAIILLAABBIILLIITTYY
+       ppiinngg is part of _i_p_u_t_i_l_s package and the latest versions are   available
+       in    source    form    at   http://www.skbuff.net/iputils/iputils-cur‐
+       rent.tar.bz2.
+
+iputils-161105                 10 November 2016                        PING(8)

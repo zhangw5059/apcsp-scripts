@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -z $@ ]
+   then
+	for arg in rpi01 rpi02 rpi03 rpi04 rpi05 rpi06 rpi07 rpi08 rpi09 rpi10 rpi11 rpi12 rpi13 rpi14 rpi15 rpi16 rpi17 rpi18
+	do
+	    ping -c 1 -q  $arg
+	    if [ $? -eq 0 ]
+	       then
+		echo "$arg : alive"
+		else echo "$arg : dead"
+		fi
+	done
+else for arg in $@
+do
+     ping -c 1 -q $arg
+     if [ $? -eq 0 ]
+     	then
+		echo "$arg : alive"
+	else echo "$arg : dead"
+	fi
+done
+fi
